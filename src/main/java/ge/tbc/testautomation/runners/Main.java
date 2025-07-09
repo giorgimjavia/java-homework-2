@@ -4,6 +4,7 @@ import ge.tbc.testautomation.figures.Triangle;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Resolve Hot Fix");
         Circle circle = new Circle(5);
         System.out.println("Circle Area: " + circle.getArea());
         circle.doubleSize();
