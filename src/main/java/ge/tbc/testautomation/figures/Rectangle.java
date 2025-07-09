@@ -1,6 +1,6 @@
 package ge.tbc.testautomation.figures;
 
-public class Rectangle extends Figure {
+public abstract class Rectangle extends Figure {
     private double a;
     private double b;
 
