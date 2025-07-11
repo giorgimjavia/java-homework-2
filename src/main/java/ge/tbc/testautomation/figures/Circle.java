@@ -5,13 +5,13 @@ import ge.tbc.testautomation.abstractClassesInterfaces.interfaces.IValidFigure;
 import ge.tbc.testautomation.exceptionsStringOperationsRegex.LimitException;
 import ge.tbc.testautomation.exceptionsStringOperationsRegex.RadiusException;
 
-public class Circle extends Figure implements IResizable, IValidFigure {
+public class Circle extends Figure implements IResizable, IValidFigure, Comparable<Circle> {
     private double radius;
 
     public Circle(double radius) {
-        if (numberOfInstances > 5) {
-            throw new LimitException("INSTANTIATION LIMIT REACHED");
-        }
+//        if (numberOfInstances > 5) {
+//            throw new LimitException("INSTANTIATION LIMIT REACHED");
+//        }
 
         if (radius <= 0) {
             throw new RadiusException("RADIUS VALUE NOT VALID");
@@ -67,5 +67,23 @@ public class Circle extends Figure implements IResizable, IValidFigure {
     @Override
     public boolean validateFigure() {
         return radius > 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Circle radius = " + radius;
+    }
+
+    public int compareTo(Circle c) {
+        return Double.compare(this.radius, c.radius);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.radius == ((Circle)obj).radius;
+    }
+
+    public int hashCode() {
+        return Double.hashCode(radius);
     }
 }
