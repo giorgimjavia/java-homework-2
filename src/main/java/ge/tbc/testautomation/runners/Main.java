@@ -1,27 +1,59 @@
 package ge.tbc.testautomation.runners;
-import ge.tbc.testautomation.figures.Circle;
-import ge.tbc.testautomation.figures.Triangle;
+
+import ge.tbc.testautomation.annotationsAndStreams.Analyzable;
+import ge.tbc.testautomation.annotationsAndStreams.VariableNameAnnotation;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class Main {
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
-        System.out.println("Resolve Hot Fix");
-        Circle circle = new Circle(5);
-        System.out.println("Circle Area: " + circle.getArea());
-        circle.doubleSize();
-        System.out.println("Circle Double Size Is: " + circle.getArea());
-        circle.customSize(2.5);
-        System.out.println("Circle Costume Size Is: " + circle.getLength());
-        System.out.println(circle.validateFigure());
-        circle.printPackageName();
+        Field[] fields = Analyzable.class.getDeclaredFields();
 
-        Triangle triangle = new Triangle(3, 4, 5, 9);
-        System.out.println("Triangle Area: " + triangle.getArea());
-        triangle.doubleSize();
-        System.out.println("Triangle Double Size Is: " + triangle.getArea());
-        triangle.customSize(1.5);
-        System.out.println("Triangle Costume Size Is : " + triangle.getLength());
-        System.out.println(triangle.validateFigure());
-        triangle.printPackageName();
+        List<Field> annotatedFields = Arrays.stream(fields)
+                .filter(field -> field.isAnnotationPresent(VariableNameAnnotation.class)).collect(Collectors.toList());
+
+        List<Field> match = annotatedFields.stream()
+                .filter(field -> {
+                    VariableNameAnnotation annotation = field.getAnnotation(VariableNameAnnotation.class);
+                    return field.getName().equalsIgnoreCase(annotation.name());
+                })
+                .collect(Collectors.toList());
+
+        List<Field> no_match = annotatedFields.stream()
+                .filter(field -> {
+                    VariableNameAnnotation annotation = field.getAnnotation(VariableNameAnnotation.class);
+                    return !field.getName().equalsIgnoreCase(annotation.name());
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("Annotations are matching: ");
+        for (Field field : match) {
+            String annotationName = field.getAnnotation(VariableNameAnnotation.class).name();
+            System.out.println(field.getName() + " annotation: " + annotationName);
+        }
+
+        System.out.println("\nAnnotations aren't matching: ");
+        for (Field field : no_match) {
+            String annotationName = field.getAnnotation(VariableNameAnnotation.class).name();
+            System.out.println(field.getName() + " annotation: " + annotationName);
+        }
+
+        @SuppressWarnings("unused")
+        double points = 46.28;
+
+        @SuppressWarnings("unused")
+        int number = 50;
+
+        @SuppressWarnings("unused")
+        boolean isUnused = false;
+
+        @SuppressWarnings("unused")
+        String text = "text";
 
 
     }
