@@ -1,61 +1,40 @@
 package ge.tbc.testautomation.runners;
 
-import ge.tbc.testautomation.annotationsAndStreams.Analyzable;
-import ge.tbc.testautomation.annotationsAndStreams.VariableNameAnnotation;
-
+import ge.tbc.testautomation.figures.Circle;
+import ge.tbc.testautomation.figures.Rectangle;
+import ge.tbc.testautomation.generics.AnyPair;
+import ge.tbc.testautomation.generics.FigurePair;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class Main {
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
-        Field[] fields = Analyzable.class.getDeclaredFields();
+        Integer integer = 20;
+        String string = "Text";
 
-        List<Field> annotatedFields = Arrays.stream(fields)
-                .filter(field -> field.isAnnotationPresent(VariableNameAnnotation.class)).collect(Collectors.toList());
+        AnyPair<Field[], Field[]> declaredFieldsPair = getDeclaredFields(integer, string);
 
-        List<Field> match = annotatedFields.stream()
-                .filter(field -> {
-                    VariableNameAnnotation annotation = field.getAnnotation(VariableNameAnnotation.class);
-                    return field.getName().equalsIgnoreCase(annotation.name());
-                })
-                .collect(Collectors.toList());
-
-        List<Field> no_match = annotatedFields.stream()
-                .filter(field -> {
-                    VariableNameAnnotation annotation = field.getAnnotation(VariableNameAnnotation.class);
-                    return !field.getName().equalsIgnoreCase(annotation.name());
-                })
-                .collect(Collectors.toList());
-
-        System.out.println("Annotations are matching: ");
-        for (Field field : match) {
-            String annotationName = field.getAnnotation(VariableNameAnnotation.class).name();
-            System.out.println(field.getName() + " annotation: " + annotationName);
+        System.out.println("Integer Fields:");
+        for (Field field : declaredFieldsPair.getElementOne()) {
+            System.out.println(field.getName());
         }
 
-        System.out.println("\nAnnotations aren't matching: ");
-        for (Field field : no_match) {
-            String annotationName = field.getAnnotation(VariableNameAnnotation.class).name();
-            System.out.println(field.getName() + " annotation: " + annotationName);
+        System.out.println("String Fields:");
+        for (Field field : declaredFieldsPair.getElementTwo()) {
+            System.out.println(field.getName());
         }
 
-        @SuppressWarnings("unused")
-        double points = 46.28;
+        Circle circle = new Circle(5.0);
+        Rectangle rectangle = new Rectangle(4.0, 6.0);
 
-        @SuppressWarnings("unused")
-        int number = 50;
+        FigurePair<Circle, Rectangle> figurePair = new FigurePair<>(circle, rectangle);
 
-        @SuppressWarnings("unused")
-        boolean isUnused = false;
-
-        @SuppressWarnings("unused")
-        String text = "text";
-
-
+        System.out.println(figurePair);
+    }
+    private static <K, D> AnyPair<Field[], Field[]> getDeclaredFields(K objOne, D objTwo) {
+        Field[] fieldsOne = objOne.getClass().getDeclaredFields();
+        Field[] fieldsTwo = objTwo.getClass().getDeclaredFields();
+        return new AnyPair<>(fieldsOne, fieldsTwo);
     }
 
 
